@@ -237,7 +237,7 @@ export default class TunerDevice extends events.EventEmitter {
                 this._process.stderr.on("data", data => {
                     if (data.toString().match("Recording...")) {
                         pt2Resolver();
-                        log.debug("got Recording");
+                        log.info("got Recording");
                     }
                 });
             });
