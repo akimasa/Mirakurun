@@ -59,7 +59,6 @@ export default class TunerDevice extends events.EventEmitter {
     private _isAvailable: boolean = true;
     private _exited: boolean = false;
     private _closing: boolean = false;
-    private _pt2Resolver = () => {};
 
     constructor(private _index: number, private _config: config.Tuner) {
         super();
@@ -222,18 +221,25 @@ export default class TunerDevice extends events.EventEmitter {
     }
 
     private _spawn(ch: ChannelItem): Promise<void> {
-
         if (process.platform !== "win32" && this._config.isPT2 === true && !this._config.dvbDevicePath) {
             // PT2 support
+            let pt2Resolver = () => {};
             return new Promise<void>(resolve => {
                 pt2Queue.add(() => {
                     return new Promise(_resolve => {
                         resolve();
-                        this._pt2Resolver = _resolve;
+                        pt2Resolver = _resolve;
                         setTimeout(_resolve, 4000);
                     });
                 });
-            }).then(() => this.__spawn(ch));
+            }).then(() => {
+                this.__spawn(ch);
+                this._process.stderr.on("data", data => {
+                    if (data.toString().match("Recording...")) {
+                        pt2Resolver();
+                    }
+                });
+            });
         } else {
             // regular way
             return this.__spawn(ch);
@@ -311,9 +317,6 @@ export default class TunerDevice extends events.EventEmitter {
         });
 
         this._process.stderr.on("data", data => {
-            if (data.toString().match("Recording...")) {
-                this._pt2Resolver();
-            }
             log.info("TunerDevice#%d > %s", this._index, data.toString().trim());
         });
 
