@@ -48,6 +48,11 @@ export const parameters = [
         minimum: 0
     },
     {
+        in: "header",
+        name: "X-Mirakurun-Delete-Pids",
+        type: "string",
+    },
+    {
         in: "query",
         name: "decode",
         type: "integer",
@@ -79,7 +84,8 @@ export const get: Operation = (req, res) => {
         id: (req.ip || "unix") + ":" + (req.connection.remotePort || Date.now()),
         priority: req.get("X-Mirakurun-Priority") || 0,
         agent: req.get("User-Agent"),
-        disableDecoder: (req.query.decode === 0)
+        disableDecoder: (req.query.decode === 0),
+        deletePids: req.get("X-Mirakurun-Delete-Pids")
     })
         .then(stream => {
 

@@ -331,7 +331,8 @@ export default class Tuner {
                         noProvide: setting.noProvide,
                         parseNIT: setting.parseNIT,
                         parseSDT: setting.parseSDT,
-                        parseEIT: setting.parseEIT
+                        parseEIT: setting.parseEIT,
+                        deletePids: user.deletePids
                     });
 
                     device.startStream(user, tsFilter, setting.channel)

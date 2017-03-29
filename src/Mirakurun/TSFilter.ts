@@ -34,6 +34,7 @@ interface StreamOptions extends stream.DuplexOptions {
     readonly parseNIT?: boolean;
     readonly parseSDT?: boolean;
     readonly parseEIT?: boolean;
+    readonly deletePids?: string;
 }
 
 const PACKET_SIZE = 188;
@@ -78,6 +79,7 @@ export default class TSFilter extends stream.Duplex {
     private _parseSDT: boolean = false;
     private _parseEIT: boolean = false;
     private _targetNetworkId: number;
+    private _deletePids: number[] = [];
 
     // aribts
     private _parser: stream.Transform = new aribts.TsStream();
@@ -169,6 +171,12 @@ export default class TSFilter extends stream.Duplex {
             } else if (status.epg[this._targetNetworkId] !== true) {
                 status.epg[this._targetNetworkId] = true;
                 this._parseEIT = true;
+            }
+        }
+        if (options.deletePids !== undefined) {
+            const delPids = options.deletePids.split(",");
+            for (let i = 0; i < delPids.length; i++) {
+                this._deletePids.push(parseInt(delPids[i]));
             }
         }
 
@@ -316,6 +324,9 @@ export default class TSFilter extends stream.Duplex {
             return;
         }
         if (this._providePids !== null && this._providePids.indexOf(pid) === -1) {
+            return;
+        }
+        if (this._deletePids !== null && this._deletePids.indexOf(pid) !== -1) {
             return;
         }
 
