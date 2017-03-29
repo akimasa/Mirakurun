@@ -79,7 +79,7 @@ export default class TSFilter extends stream.Duplex {
     private _parseSDT: boolean = false;
     private _parseEIT: boolean = false;
     private _targetNetworkId: number;
-    private _deletePids: number[] = [];
+    private _deletePids: number[] = null;
 
     // aribts
     private _parser: stream.Transform = new aribts.TsStream();
@@ -174,6 +174,7 @@ export default class TSFilter extends stream.Duplex {
             }
         }
         if (options.deletePids !== undefined) {
+            this._deletePids = [];
             const delPids = options.deletePids.split(",");
             for (let i = 0; i < delPids.length; i++) {
                 this._deletePids.push(parseInt(delPids[i]));
