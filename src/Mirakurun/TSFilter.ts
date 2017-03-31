@@ -34,7 +34,7 @@ interface StreamOptions extends stream.DuplexOptions {
     readonly parseNIT?: boolean;
     readonly parseSDT?: boolean;
     readonly parseEIT?: boolean;
-    readonly deletePids?: string;
+    readonly deletePids?: number[];
 }
 
 const PACKET_SIZE = 188;
@@ -173,12 +173,8 @@ export default class TSFilter extends stream.Duplex {
                 this._parseEIT = true;
             }
         }
-        if (options.deletePids !== undefined) {
-            this._deletePids = [];
-            const delPids = options.deletePids.split(",");
-            for (let i = 0; i < delPids.length; i++) {
-                this._deletePids.push(parseInt(delPids[i]));
-            }
+        for (let i = 0; i < options.deletePids.length; i++) {
+            this._providePids = this._providePids.filter((x) => x !== options.deletePids[i]);
         }
 
         this._parser.resume();
@@ -325,9 +321,6 @@ export default class TSFilter extends stream.Duplex {
             return;
         }
         if (this._providePids !== null && this._providePids.indexOf(pid) === -1) {
-            return;
-        }
-        if (this._deletePids !== null && this._deletePids.indexOf(pid) !== -1) {
             return;
         }
 

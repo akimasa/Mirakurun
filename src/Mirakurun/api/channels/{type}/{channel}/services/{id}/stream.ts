@@ -80,12 +80,21 @@ export const get: Operation = (req, res) => {
     let requestAborted = false;
     req.once("close", () => requestAborted = true);
 
+    let deletePids = [];
+
+    if (req.get("X-Mirakurun-Delete-Pids") !== undefined) {
+        const reqDelPids = req.get("X-Mirakurun-Delete-Pids").split(",");
+        for (let i = 0; i < reqDelPids.length; i++) {
+            deletePids.push(parseInt(reqDelPids[i]));
+        }
+    }
+
     service.getStream({
         id: (req.ip || "unix") + ":" + (req.connection.remotePort || Date.now()),
         priority: req.get("X-Mirakurun-Priority") || 0,
         agent: req.get("User-Agent"),
         disableDecoder: (req.query.decode === 0),
-        deletePids: req.get("X-Mirakurun-Delete-Pids")
+        deletePids: deletePids
     })
         .then(stream => {
 

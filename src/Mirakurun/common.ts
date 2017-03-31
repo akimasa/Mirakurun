@@ -20,7 +20,7 @@ export interface User {
     readonly priority: number;
     readonly agent?: string;
     readonly disableDecoder?: boolean;
-    readonly deletePids?: string;
+    readonly deletePids?: number[];
 }
 
 export type ChannelType = "GR" | "BS" | "CS" | "SKY";
