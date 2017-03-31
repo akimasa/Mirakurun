@@ -172,7 +172,7 @@ export default class TSFilter extends stream.Duplex {
                 this._parseEIT = true;
             }
         }
-        if(options.deletePids !== null){
+        if (options.deletePids !== null) {
             for (let i = 0; i < options.deletePids.length; i++) {
                 this._providePids = this._providePids.filter((x) => x !== options.deletePids[i]);
             }
