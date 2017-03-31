@@ -79,7 +79,6 @@ export default class TSFilter extends stream.Duplex {
     private _parseSDT: boolean = false;
     private _parseEIT: boolean = false;
     private _targetNetworkId: number;
-    private _deletePids: number[] = null;
 
     // aribts
     private _parser: stream.Transform = new aribts.TsStream();
