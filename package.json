@@ -54,7 +54,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "aribts": "^1.3.3",
+    "aribts": "github:akimasa/node-aribts#v1_native_crc",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "express-openapi": "^0.33.0",
