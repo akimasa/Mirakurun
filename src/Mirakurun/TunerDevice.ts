@@ -290,7 +290,15 @@ export default class TunerDevice extends events.EventEmitter {
                 "TunerDevice#%d process has closed with exit code=%d by signal `%s` (pid=%d)",
                 this._index, code, signal, this._process.pid
             );
+            if (code !== 0) {
+                ++this._fatalCount;
+                if (this._fatalCount >= 3) {
+                    log.fatal("TunerDevice#%d has something fault! **RESTART REQUIRED** after fix it.", this._index);
 
+                    this._isFault = true;
+                    this._closing = true;
+                }
+            }
             this._end();
             setTimeout(this._release.bind(this), this._config.dvbDevicePath ? 1000 : 100);
         });
