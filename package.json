@@ -1,5 +1,5 @@
 {
-  "name": "mirakurun",
+  "name": "@akimasa/mirakurun",
   "preferGlobal": true,
   "description": "Japanese DTV Tuner Server Service.",
   "version": "3.2.0",
