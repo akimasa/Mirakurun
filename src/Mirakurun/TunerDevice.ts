@@ -341,7 +341,7 @@ export default class TunerDevice extends events.EventEmitter {
 
         this._process.stderr.on("data", data => {
             log.debug("TunerDevice#%d > %s", this._index, data.toString().trim());
-            if (/dB/.test(data.toString().trim())){
+            if (/dB/.test(data.toString().trim())) {
                 log.info("TunerDevice#%d > %s", this._index, data.toString().trim());
             }
         });
